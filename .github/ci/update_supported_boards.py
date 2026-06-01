@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# SPDX-FileCopyrightText: 2025 Espressif Systems (Shanghai) CO LTD
+# SPDX-FileCopyrightText: 2025-2026 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
 
 import re
@@ -71,50 +71,62 @@ def extract_board_info(board_path):
         touch_types = []
         speaker_codec = []
         mic_codec = []
+        cam_sensor = []
         for line in lines:
             match = re.match(r"#define\s+BSP_CAPS_([A-Z0-9_]+)\s+1\b", line)
             if match:
                 features.add(match.group(1))
 
-        # Check for specific driver/controller names in C file
-        c_file = next(board_path.glob(f"{board_name}.c"), None)
-        # Some BSPs has main C file in src/ folder
-        if not c_file or not c_file.exists():
-            c_file = next(board_path.glob(f"src/{board_name}.c"), None)
-        if c_file and c_file.exists():
-            with open(c_file, "r", encoding="utf-8") as f:
-                c_code = f.read()
+        boardname_src_file = (board_name + '.c')
+        c_files = [boardname_src_file, "bsp_display.c", "bsp_audio.c"]
+        for file in c_files:
+            # Check for specific driver/controller names in C file
+            c_file = next(board_path.glob(file), None)
+            # Some BSPs has main C file in src/ folder
+            if not c_file or not c_file.exists():
+                c_file = next(board_path.glob(f"src/{file}"), None)
+            if c_file and c_file.exists():
+                with open(c_file, "r", encoding="utf-8") as f:
+                    c_code = f.read()
 
-                # DISPLAY: find all esp_lcd_new_panel_* excluding io_*
-                display_matches = re.findall(r"esp_lcd_new_panel_([a-z0-9_]+)\s*\(", c_code)
-                display_types = [m for m in display_matches if not m.startswith("io_")]
+                    if file == boardname_src_file or file == "bsp_display.c":
+                        # DISPLAY: find all esp_lcd_new_panel_* excluding io_*
+                        display_matches = re.findall(r"esp_lcd_new_panel_([a-z0-9_]+)\s*\(", c_code)
+                        display_types = [m for m in display_matches if not m.startswith("io_")]
 
-                # TOUCH: esp_lcd_touch_new_i2c_*
-                touch_types = re.findall(r"esp_lcd_touch_new_i2c_([a-z0-9_]+)\s*\(", c_code)
+                        # TOUCH: esp_lcd_touch_new_i2c_*
+                        touch_types = re.findall(r"esp_lcd_touch_new_i2c_([a-z0-9_]+)\s*\(", c_code)
 
-                # AUDIO_SPEAKER
-                if "AUDIO_SPEAKER" in features:
-                    speaker_code_section = extract_function_body(c_code, 'bsp_audio_codec_speaker_init')
-                    if speaker_code_section is not None:
-                        matches = re.findall(r"([a-z0-9_]+)_codec_new", speaker_code_section)
-                        speaker_codec = [m for m in matches if not m.startswith("audio")]
-                    if not speaker_codec:
-                        speaker_code_section = extract_function_body(c_code, 'bsp_audio_codec_init')
-                        if speaker_code_section is not None:
-                            matches = re.findall(r"([a-z0-9_]+)_codec_new", speaker_code_section)
-                            speaker_codec = [m for m in matches if not m.startswith("audio")]
+                    if file == boardname_src_file or file == "bsp_audio.c":
+                        # AUDIO_SPEAKER
+                        if "AUDIO_SPEAKER" in features:
+                            speaker_code_section = extract_function_body(c_code, 'bsp_audio_codec_speaker_init')
+                            if speaker_code_section is not None:
+                                matches = re.findall(r"([a-z0-9_]+)_codec_new", speaker_code_section)
+                                speaker_codec = [m for m in matches if not m.startswith("audio")]
+                            if not speaker_codec:
+                                speaker_code_section = extract_function_body(c_code, 'bsp_audio_codec_init')
+                                if speaker_code_section is not None:
+                                    matches = re.findall(r"([a-z0-9_]+)_codec_new", speaker_code_section)
+                                    speaker_codec = [m for m in matches if not m.startswith("audio")]
 
-                # AUDIO_MIC
-                if "AUDIO_MIC" in features:
-                    mic_code_section = extract_function_body(c_code, 'bsp_audio_codec_microphone_init')
-                    if mic_code_section is not None:
-                        matches = re.findall(r"([a-z0-9_]+)_codec_new", mic_code_section)
-                        mic_codec = [m for m in matches if not m.startswith("audio")]
-                    if not mic_codec:
-                        mic_code_section = extract_function_body(c_code, 'bsp_audio_codec_init')
-                        if mic_code_section is not None:
-                            matches = re.findall(r"([a-z0-9_]+)_codec_new", mic_code_section)
-                            mic_codec = [m for m in matches if not m.startswith("audio")]
+                        # AUDIO_MIC
+                        if "AUDIO_MIC" in features:
+                            mic_code_section = extract_function_body(c_code, 'bsp_audio_codec_microphone_init')
+                            if mic_code_section is not None:
+                                matches = re.findall(r"([a-z0-9_]+)_codec_new", mic_code_section)
+                                mic_codec = [m for m in matches if not m.startswith("audio")]
+                            if not mic_codec:
+                                mic_code_section = extract_function_body(c_code, 'bsp_audio_codec_init')
+                                if mic_code_section is not None:
+                                    matches = re.findall(r"([a-z0-9_]+)_codec_new", mic_code_section)
+                                    mic_codec = [m for m in matches if not m.startswith("audio")]
+
+            # CAMERA: find camera sensors
+            if "CAMERA" in features:
+                match = re.search(r"Supported camera sensors:\s*(.*)", content)
+                if match:
+                    cam_sensor = re.findall(r"[A-Z0-9_]+", match.group(1))
 
     # Extract SoC from YML
     with open(yml_file, "r", encoding="utf-8") as f:
@@ -123,7 +135,7 @@ def extract_board_info(board_path):
 
     # Prepare image path
     image_path = next(board_path.glob(f"doc/{board_name}.webp"), None)
-    img_html = f'<img src="{image_path.as_posix()}" width="150">' if image_path.exists() else "-"
+    img_html = f'<img src="{image_path.as_posix()}" width="150">' if image_path and image_path.exists() else "-"
 
     # Emoji map for features
     feature_emojis = {
@@ -134,6 +146,7 @@ def extract_board_info(board_path):
         "AUDIO_SPEAKER": ":speaker:",
         "SDCARD": ":floppy_disk:",
         "IMU": ":video_game:",
+        "HUMITURE": ":thermometer:",
         "USB": ":electric_plug:",
         "BUTTONS": ":radio_button:",
         "LED": ":bulb:",
@@ -151,6 +164,7 @@ def extract_board_info(board_path):
         "AUDIO_SPEAKER": "Audio Speaker",
         "SDCARD": "uSD Card",
         "IMU": "IMU",
+        "HUMITURE": "Temperature and Humidity",
         "USB": "USB-OTG",
         "BUTTONS": "Button",
         "LED": "LED",
@@ -173,6 +187,8 @@ def extract_board_info(board_path):
             f_suffix = f" ({', '.join(speaker_codec)})" if speaker_codec else ""
         elif f == "AUDIO_MIC":
             f_suffix = f" ({', '.join(mic_codec)})" if mic_codec else ""
+        elif f == "CAMERA":
+            f_suffix = f" ({', '.join(cam_sensor)})" if cam_sensor else ""
 
         feature_list += f"{f_emoji} {f_name} {f_suffix}<br/>"
     feature_list += ""

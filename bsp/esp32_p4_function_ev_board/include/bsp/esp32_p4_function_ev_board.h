@@ -55,6 +55,7 @@
 #define BSP_CAPS_AUDIO_MIC      1
 #define BSP_CAPS_SDCARD         1
 #define BSP_CAPS_IMU            0
+#define BSP_CAPS_CAMERA         1
 /** @} */ // end of capabilities
 
 /**************************************************************************************************
@@ -97,6 +98,14 @@
 #define BSP_LCD_TOUCH_INT     (GPIO_NUM_NC)
 #endif
 /** @} */ // end of display
+
+/** @defgroup g12_camera Camera
+ *  @brief Camera BSP API
+ *  @{
+ */
+#define BSP_CAMERA_GPIO_XCLK (GPIO_NUM_NC)
+#define BSP_CAMERA_RST       (GPIO_NUM_NC)
+/** @} */ // end of camera
 
 /** @defgroup g02_storage SD Card and SPIFFS
  *  @brief SPIFFS and SD card BSP API
@@ -438,7 +447,7 @@ typedef struct {
  * This function initializes MIPI-DSI, display controller and starts LVGL handling task.
  * LCD backlight must be enabled separately by calling bsp_display_brightness_set()
  *
- * @return Pointer to LVGL display or NULL when error occured
+ * @return Pointer to LVGL display or NULL when error occurred
  */
 lv_display_t *bsp_display_start(void);
 
@@ -450,7 +459,7 @@ lv_display_t *bsp_display_start(void);
  *
  * @param cfg display configuration
  *
- * @return Pointer to LVGL display or NULL when error occured
+ * @return Pointer to LVGL display or NULL when error occurred
  */
 lv_display_t *bsp_display_start_with_config(const bsp_display_cfg_t *cfg);
 
@@ -544,6 +553,38 @@ esp_err_t bsp_usb_host_start(bsp_usb_host_power_mode_t mode, bool limit_500mA);
 esp_err_t bsp_usb_host_stop(void);
 
 /** @} */ // end of usb
+
+/** @addtogroup g12_camera
+ *  @{
+ */
+
+/**************************************************************************************************
+ *
+ * Camera interface
+ * Supported camera sensors: OV5647, SC2336
+ * More information in display_camera_video example
+ *
+ **************************************************************************************************/
+
+#define BSP_CAMERA_DEVICE       (ESP_VIDEO_MIPI_CSI_DEVICE_NAME)
+#define BSP_CAMERA_ROTATION     (0)
+
+/**
+ * @brief BSP camera configuration structure (for future use)
+ *
+ */
+typedef struct {
+    uint8_t dummy;
+} bsp_camera_cfg_t;
+
+/**
+ * @brief Initialize camera
+ *
+ * Camera sensor initialization.
+ */
+esp_err_t bsp_camera_start(const bsp_camera_cfg_t *cfg);
+
+/** @} */ // end of camera
 
 #ifdef __cplusplus
 }

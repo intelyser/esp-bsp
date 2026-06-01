@@ -63,11 +63,11 @@ Based on the above configurations, there are three different anti-tearing modes 
 
 |     Available    |       Capability       |Controller/Codec|                                                                                                              Component                                                                                                              |      Version      |
 |------------------|------------------------|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
-|:heavy_check_mark:|     :pager: DISPLAY    |                |[espressif/esp_lcd_gc9503](https://components.espressif.com/components/espressif/esp_lcd_gc9503)<br/>[espressif/esp_lcd_panel_io_additions](https://components.espressif.com/components/espressif/esp_lcd_panel_io_additions)<br/>idf|^3<br/>^1<br/>>=5.3|
+|:heavy_check_mark:|     :pager: DISPLAY    |                |idf<br/>[espressif/esp_lcd_panel_io_additions](https://components.espressif.com/components/espressif/esp_lcd_panel_io_additions)<br/>[espressif/esp_lcd_gc9503](https://components.espressif.com/components/espressif/esp_lcd_gc9503)|>=5.3<br/>^1<br/>^3|
 |:heavy_check_mark:|:black_circle: LVGL_PORT|                |                                                                    [espressif/esp_lvgl_port](https://components.espressif.com/components/espressif/esp_lvgl_port)                                                                   |         ^2        |
-|:heavy_check_mark:|    :point_up: TOUCH    |                |    [espressif/esp_lcd_touch_ft5x06](https://components.espressif.com/components/espressif/esp_lcd_touch_ft5x06)<br/>[espressif/esp_lcd_touch_gt1151](https://components.espressif.com/components/espressif/esp_lcd_touch_gt1151)    |     ^1<br/>^1     |
+|:heavy_check_mark:|    :point_up: TOUCH    |                |    [espressif/esp_lcd_touch_gt1151](https://components.espressif.com/components/espressif/esp_lcd_touch_gt1151)<br/>[espressif/esp_lcd_touch_ft5x06](https://components.espressif.com/components/espressif/esp_lcd_touch_ft5x06)    |     ^1<br/>^1     |
 |:heavy_check_mark:| :radio_button: BUTTONS |                |                                                                           [espressif/button](https://components.espressif.com/components/espressif/button)                                                                          |         ^4        |
-|:heavy_check_mark:|  :musical_note: AUDIO  |                |                                                                    [espressif/esp_codec_dev](https://components.espressif.com/components/espressif/esp_codec_dev)                                                                   |       ~1.3.1      |
+|:heavy_check_mark:|  :musical_note: AUDIO  |                |                                                                    [espressif/esp_codec_dev](https://components.espressif.com/components/espressif/esp_codec_dev)                                                                   |        ~1.5       |
 |:heavy_check_mark:| :speaker: AUDIO_SPEAKER|     es8311     |                                                                                                                                                                                                                                     |                   |
 |:heavy_check_mark:| :microphone: AUDIO_MIC |     es7210     |                                                                                                                                                                                                                                     |                   |
 |        :x:       |  :floppy_disk: SDCARD  |                |                                                                                                                                                                                                                                     |                   |
@@ -96,29 +96,29 @@ Based on the above configurations, there are three different anti-tearing modes 
 
 ## LVGL Benchmark
 
-**DATE:** 11.08.2025 02:49
+**DATE:** 08.01.2026 01:35
 
-**LVGL version:** 9.3.0
+**LVGL version:** 9.4.0
 
 | Name | Avg. CPU | Avg. FPS | Avg. time | render time | flush time |
 | ---- | :------: | :------: | :-------: | :---------: | :--------: |
-| Empty screen | 98%  | 18  | 51  | 30  | 21  |
-| Moving wallpaper | 99%  | 8  | 106  | 83  | 23  |
-| Single rectangle | 99%  | 34  | 25  | 2  | 23  |
-| Multiple rectangles | 99%  | 32  | 27  | 18  | 9  |
-| Multiple RGB images | 99%  | 28  | 31  | 24  | 7  |
-| Multiple ARGB images | 100%  | 17  | 51  | 35  | 16  |
-| Rotated ARGB images | 100%  | 14  | 62  | 52  | 10  |
-| Multiple labels | 99%  | 18  | 45  | 34  | 11  |
-| Screen sized text | 100%  | 8  | 108  | 92  | 16  |
-| Multiple arcs | 99%  | 35  | 22  | 7  | 15  |
-| Containers | 99%  | 16  | 53  | 42  | 11  |
-| Containers with overlay | 99%  | 9  | 89  | 77  | 12  |
-| Containers with opa | 99%  | 11  | 73  | 58  | 15  |
-| Containers with opa_layer | 99%  | 5  | 148  | 135  | 13  |
-| Containers with scrolling | 99%  | 11  | 81  | 63  | 18  |
-| Widgets demo | 99%  | 7  | 100  | 87  | 13  |
-| All scenes avg. | 99%  | 16  | 66  | 52  | 14  |
+| Empty screen | 97%  | 18  | 51  | 29  | 22  |
+| Moving wallpaper | 98%  | 9  | 95  | 83  | 12  |
+| Single rectangle | 96%  | 35  | 25  | 2  | 23  |
+| Multiple rectangles | 96%  | 32  | 27  | 17  | 10  |
+| Multiple RGB images | 97%  | 29  | 29  | 22  | 7  |
+| Multiple ARGB images | 97%  | 16  | 51  | 35  | 16  |
+| Rotated ARGB images | 98%  | 15  | 57  | 50  | 7  |
+| Multiple labels | 98%  | 18  | 47  | 34  | 13  |
+| Screen sized text | 99%  | 8  | 110  | 88  | 22  |
+| Multiple arcs | 96%  | 35  | 22  | 7  | 15  |
+| Containers | 98%  | 14  | 59  | 44  | 15  |
+| Containers with overlay | 98%  | 9  | 90  | 77  | 13  |
+| Containers with opa | 98%  | 12  | 71  | 56  | 15  |
+| Containers with opa_layer | 99%  | 6  | 145  | 132  | 13  |
+| Containers with scrolling | 99%  | 11  | 81  | 61  | 20  |
+| Widgets demo | 98%  | 7  | 100  | 86  | 14  |
+| All scenes avg. | 97%  | 17  | 65  | 51  | 14  |
 
 
 

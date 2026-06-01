@@ -24,15 +24,15 @@
 
 /* LCD display color format */
 #define BSP_LCD_COLOR_FORMAT        (ESP_LCD_COLOR_FORMAT_RGB565)
-/* LCD display color bytes endianess */
+/* LCD display color bytes endianness */
 #define BSP_LCD_BIGENDIAN           (1)
 /* LCD display color bits */
 #define BSP_LCD_BITS_PER_PIXEL      (16)
 /* LCD display color space */
 #if defined(CONFIG_BSP_DISPLAY_COLOR_SPACE_RGB)
-#define BSP_LCD_COLOR_SPACE         (ESP_LCD_COLOR_SPACE_RGB)
+#define BSP_LCD_COLOR_SPACE         (LCD_RGB_ELEMENT_ORDER_RGB)
 #elif defined(CONFIG_BSP_DISPLAY_COLOR_SPACE_BGR)
-#define BSP_LCD_COLOR_SPACE         (ESP_LCD_COLOR_SPACE_BGR)
+#define BSP_LCD_COLOR_SPACE         (LCD_RGB_ELEMENT_ORDER_BGR)
 #endif
 /* Display definition */
 #define BSP_LCD_H_RES              (CONFIG_BSP_DISPLAY_WIDTH)
@@ -75,7 +75,8 @@ typedef struct {
  *      - ESP_OK         On success
  *      - Else           esp_lcd failure
  */
-esp_err_t bsp_display_new(const bsp_display_config_t *config, esp_lcd_panel_handle_t *ret_panel, esp_lcd_panel_io_handle_t *ret_io);
+esp_err_t bsp_display_new(const bsp_display_config_t *config, esp_lcd_panel_handle_t *ret_panel,
+                          esp_lcd_panel_io_handle_t *ret_io);
 
 /**
  * @brief Initialize display's brightness

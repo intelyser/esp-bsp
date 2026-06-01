@@ -171,6 +171,7 @@ You can use these macros to conditionally compile code depending on feature avai
 | Type | Name |
 | ---: | :--- |
 |  esp\_err\_t | [**bsp\_i2c\_deinit**](#function-bsp_i2c_deinit) (void) <br>_Deinit I2C driver and free its resources._ |
+|  i2c\_master\_bus\_handle\_t | [**bsp\_i2c\_get\_handle**](#function-bsp_i2c_get_handle) (void) <br>_Get I2C driver handle._ |
 |  esp\_err\_t | [**bsp\_i2c\_init**](#function-bsp_i2c_init) (void) <br>_Init I2C driver._ |
 
 ## Macros
@@ -201,6 +202,21 @@ esp_err_t bsp_i2c_deinit (
 
 * ESP\_OK On success
 * ESP\_ERR\_INVALID\_ARG I2C parameter error
+### function `bsp_i2c_get_handle`
+
+_Get I2C driver handle._
+```c
+i2c_master_bus_handle_t bsp_i2c_get_handle (
+    void
+) 
+```
+
+
+**Returns:**
+
+
+
+* I2C handle
 ### function `bsp_i2c_init`
 
 _Init I2C driver._
@@ -674,7 +690,7 @@ esp_codec_dev_handle_t bsp_audio_codec_speaker_init (
 
 **Returns:**
 
-Pointer to codec device handle or NULL when error occured
+Pointer to codec device handle or NULL when error occurred
 ### function `bsp_audio_get_codec_itf`
 
 _Get codec I2S interface (initialized in bsp\_audio\_init)_
@@ -689,7 +705,7 @@ const audio_codec_data_if_t * bsp_audio_get_codec_itf (
 
 
 
-* Pointer to codec I2S interface handle or NULL when error occured
+* Pointer to codec I2S interface handle or NULL when error occurred
 ### function `bsp_audio_init`
 
 _Init audio._
@@ -840,7 +856,6 @@ Below are some of the most relevant predefined constants:
 - `BSP_LCD_V_RES` - Vertical resolution in pixels
 - `BSP_LCD_SPI_NUM` - SPI bus used by the LCD (if applicable)
 
-
 ### Display and Touch API Reference
 
 ## Structures and Types
@@ -876,7 +891,7 @@ Below are some of the most relevant predefined constants:
 | define  | [**BSP\_LCD\_BIGENDIAN**](#define-bsp_lcd_bigendian)  (1)<br> |
 | define  | [**BSP\_LCD\_BITS\_PER\_PIXEL**](#define-bsp_lcd_bits_per_pixel)  (16)<br> |
 | define  | [**BSP\_LCD\_COLOR\_FORMAT**](#define-bsp_lcd_color_format)  (ESP\_LCD\_COLOR\_FORMAT\_RGB565)<br> |
-| define  | [**BSP\_LCD\_COLOR\_SPACE**](#define-bsp_lcd_color_space)  (ESP\_LCD\_COLOR\_SPACE\_BGR)<br> |
+| define  | [**BSP\_LCD\_COLOR\_SPACE**](#define-bsp_lcd_color_space)  (LCD\_RGB\_ELEMENT\_ORDER\_BGR)<br> |
 | define  | [**BSP\_LCD\_CS**](#define-bsp_lcd_cs)  (GPIO\_NUM\_5)<br> |
 | define  | [**BSP\_LCD\_DC**](#define-bsp_lcd_dc)  (GPIO\_NUM\_15)<br> |
 | define  | [**BSP\_LCD\_DRAW\_BUFF\_DOUBLE**](#define-bsp_lcd_draw_buff_double)  (1)<br> |
@@ -1140,7 +1155,7 @@ This function initializes SPI, display controller and starts LVGL handling task.
 
 **Returns:**
 
-Pointer to LVGL display or NULL when error occured
+Pointer to LVGL display or NULL when error occurred
 ### function `bsp_display_start_with_config`
 
 _Initialize display._
@@ -1163,7 +1178,7 @@ This function initializes SPI, display controller and starts LVGL handling task.
 
 **Returns:**
 
-Pointer to LVGL display or NULL when error occured
+Pointer to LVGL display or NULL when error occurred
 ### function `bsp_display_unlock`
 
 _Give LVGL mutex._

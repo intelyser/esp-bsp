@@ -7,6 +7,7 @@
 /**
  * @file
  * @brief ESP BSP: ESP32-S2-Kaluga Kit
+ * @deprecated This board is deprecated and no longer maintained
  */
 
 #pragma once
@@ -524,7 +525,7 @@ typedef enum {
  * @return
  *     - ESP_OK               All buttons initialized
  *     - ESP_ERR_INVALID_ARG  btn_array is too small or NULL
- *     - ESP_FAIL             Underlaying iot_button_create failed
+ *     - ESP_FAIL             Underlying iot_button_create failed
  */
 esp_err_t bsp_iot_button_create(button_handle_t btn_array[], int *btn_cnt, int btn_array_size);
 

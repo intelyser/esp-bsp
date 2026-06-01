@@ -1,4 +1,4 @@
-version: "5.0.0~3"
+version: "5.0.1~1"
 description: Board Support Package (BSP) for ESP32-S2-Kaluga kit
 url: https://github.com/espressif/esp-bsp/tree/master/bsp/esp32_s2_kaluga_kit
 
@@ -35,6 +35,5 @@ dependencies:
 examples:
   - path: ../../examples/audio
   - path: ../../examples/display
-  - path: ../../examples/display_camera
   - path: ../../examples/display_lvgl_demos
   - path: ../../examples/display_lvgl_benchmark

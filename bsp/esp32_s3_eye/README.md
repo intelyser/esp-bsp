@@ -31,18 +31,21 @@ The ESP32-S3-EYE board consists of two parts: the main board (ESP32-S3-EYE-MB) t
 <div align="center">
 <!-- START_DEPENDENCIES -->
 
-|     Available    |       Capability       |Controller/Codec|                                           Component                                          |Version|
-|------------------|------------------------|----------------|----------------------------------------------------------------------------------------------|-------|
-|:heavy_check_mark:|     :pager: DISPLAY    |     st7789     |                                              idf                                             | >=5.4 |
-|:heavy_check_mark:|:black_circle: LVGL_PORT|                |[espressif/esp_lvgl_port](https://components.espressif.com/components/espressif/esp_lvgl_port)|   ^2  |
-|        :x:       |    :point_up: TOUCH    |                |                                                                                              |       |
-|:heavy_check_mark:| :radio_button: BUTTONS |                |       [espressif/button](https://components.espressif.com/components/espressif/button)       |   ^4  |
-|:heavy_check_mark:|  :musical_note: AUDIO  |                |[espressif/esp_codec_dev](https://components.espressif.com/components/espressif/esp_codec_dev)| ~1.3.1|
-|        :x:       | :speaker: AUDIO_SPEAKER|                |                                                                                              |       |
-|:heavy_check_mark:| :microphone: AUDIO_MIC |                |                                                                                              |       |
-|:heavy_check_mark:|  :floppy_disk: SDCARD  |                |                                              idf                                             | >=5.4 |
-|:heavy_check_mark:|    :video_game: IMU    |                |               [qma6100p](https://components.espressif.com/components/qma6100p)               |   ^2  |
-|:heavy_check_mark:|     :camera: CAMERA    |                | [espressif/esp32-camera](https://components.espressif.com/components/espressif/esp32-camera) |^2.0.13|
+|     Available    |       Capability       |Controller/Codec|                                               Component                                              |   Version  |
+|------------------|------------------------|----------------|------------------------------------------------------------------------------------------------------|------------|
+|:heavy_check_mark:|     :pager: DISPLAY    |     st7789     |                                                  idf                                                 |    >=5.4   |
+|:heavy_check_mark:|:black_circle: LVGL_PORT|                |    [espressif/esp_lvgl_port](https://components.espressif.com/components/espressif/esp_lvgl_port)    |     ^2     |
+|        :x:       |    :point_up: TOUCH    |                |                                                                                                      |            |
+|:heavy_check_mark:| :radio_button: BUTTONS |                |           [espressif/button](https://components.espressif.com/components/espressif/button)           |     ^4     |
+|        :x:       |   :white_circle: KNOB  |                |                                                                                                      |            |
+|:heavy_check_mark:|  :musical_note: AUDIO  |                |    [espressif/esp_codec_dev](https://components.espressif.com/components/espressif/esp_codec_dev)    |    ~1.5    |
+|        :x:       | :speaker: AUDIO_SPEAKER|                |                                                                                                      |            |
+|:heavy_check_mark:| :microphone: AUDIO_MIC |                |                                                                                                      |            |
+|:heavy_check_mark:|  :floppy_disk: SDCARD  |                |                                                  idf                                                 |    >=5.4   |
+|:heavy_check_mark:|       :bulb: LED       |                |idf<br/>[espressif/led_indicator](https://components.espressif.com/components/espressif/led_indicator)|>=5.4<br/>^2|
+|:heavy_check_mark:|     :camera: CAMERA    |     OV2640     |        [espressif/esp_video](https://components.espressif.com/components/espressif/esp_video)        |    ~2.0    |
+|        :x:       |      :battery: BAT     |                |                                                                                                      |            |
+|        :x:       |    :video_game: IMU    |                |                                                                                                      |            |
 
 <!-- END_DEPENDENCIES -->
 </div>
@@ -55,41 +58,9 @@ The ESP32-S3-EYE board consists of two parts: the main board (ESP32-S3-EYE-MB) t
 | Example | Description | Try with ESP Launchpad |
 | ------- | ----------- | ---------------------- |
 | [Display Example](https://github.com/espressif/esp-bsp/tree/master/examples/display) | Show an image on the screen with a simple startup animation (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display-) |
-| [Camera Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_camera) | Stream camera output to display (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_camera-) |
+| [Camera Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_camera_video) | Stream camera output to display (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_camera_video) |
 | [LVGL Benchmark Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_lvgl_benchmark) | Run LVGL benchmark tests | - |
 | [LVGL Demos Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_lvgl_demos) | Run the LVGL demo player - all LVGL examples are included (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_lvgl_demos-) |
 
 <!-- END_EXAMPLES -->
 </div>
-
-<!-- START_BENCHMARK -->
-
-## LVGL Benchmark
-
-**DATE:** 11.08.2025 02:49
-
-**LVGL version:** 9.3.0
-
-| Name | Avg. CPU | Avg. FPS | Avg. time | render time | flush time |
-| ---- | :------: | :------: | :-------: | :---------: | :--------: |
-| Empty screen | 92%  | 59  | 13  | 3  | 10  |
-| Moving wallpaper | 57%  | 76  | 8  | 5  | 3  |
-| Single rectangle | 16%  | 92  | 0  | 0  | 0  |
-| Multiple rectangles | 83%  | 68  | 11  | 5  | 6  |
-| Multiple RGB images | 22%  | 89  | 1  | 1  | 0  |
-| Multiple ARGB images | 17%  | 90  | 3  | 3  | 0  |
-| Rotated ARGB images | 69%  | 64  | 15  | 13  | 2  |
-| Multiple labels | 51%  | 97  | 3  | 3  | 0  |
-| Screen sized text | 94%  | 34  | 26  | 15  | 11  |
-| Multiple arcs | 11%  | 95  | 0  | 0  | 0  |
-| Containers | 13%  | 92  | 4  | 4  | 0  |
-| Containers with overlay | 91%  | 40  | 22  | 12  | 10  |
-| Containers with opa | 26%  | 92  | 7  | 6  | 1  |
-| Containers with opa_layer | 30%  | 82  | 12  | 12  | 0  |
-| Containers with scrolling | 94%  | 40  | 22  | 11  | 11  |
-| Widgets demo | 96%  | 42  | 10  | 9  | 1  |
-| All scenes avg. | 53%  | 72  | 9  | 6  | 3  |
-
-
-
-<!-- END_BENCHMARK -->

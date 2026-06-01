@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# SPDX-FileCopyrightText: 2024-2025 Espressif Systems (Shanghai) CO LTD
+# SPDX-FileCopyrightText: 2024-2026 Espressif Systems (Shanghai) CO LTD
 # SPDX-License-Identifier: Apache-2.0
 
 """
@@ -14,7 +14,7 @@ import argparse
 import subprocess
 import urllib.request
 from pathlib import Path
-from idf_component_tools.manifest import ManifestManager
+from idf_component_tools.manager import ManifestManager
 from py_markdown_table.markdown_table import markdown_table
 from typing import Any
 
@@ -48,9 +48,10 @@ capability_dict = {
     # 'AUDIO_MIC' : r'',
     'SDCARD': r'(^idf$)',  # SD card driver is native to ESP-IDF
     'IMU': r'(icm42670$|mpu6050$|qma6100p$)',
+    'HUMITURE': r'(aht30$)',
     'LED': r'(led_indicator$|^idf$)',  # Provided by led_indicator or idf
     'BAT': r'(^idf$)',  # Battery (ADC driver) is native to ESP-IDF
-    'CAMERA': r'(esp32-camera$)',  # esp32-camera component
+    'CAMERA': r'(esp32-camera$|esp_video$)',  # esp32-camera, esp_video component
     'KNOB': r'(knob$)',  # knob component
     'SENSOR_TEMPERATURE': r'(hts221$|ds18b20$)',
     'SENSOR_HUMIDITY': r'(hts221$)',
@@ -68,6 +69,7 @@ capability_emojis = {
     "AUDIO_SPEAKER": ":speaker:",
     "SDCARD": ":floppy_disk:",
     "IMU": ":video_game:",
+    "HUMITURE": ":thermometer:",
     "USB": ":electric_plug:",
     "BUTTONS": ":radio_button:",
     "LED": ":bulb:",
@@ -81,13 +83,14 @@ def map_capability_to_driver(capability, manifest):
     components = []
     try:
         component_regex = capability_dict[capability]
-        for item in manifest.dependencies:
-            result = re.findall(component_regex, item.name)
+        for name, dependency in manifest.dependencies.items():
+            result = re.findall(component_regex, name)
             if result:
-                version = item.version_spec if item.version_spec else ""
-                component = item.name
+                version = dependency if isinstance(dependency, str) else dependency.version
+                component = name
                 # Add hyperlinks to components (but not to IDF component)
                 if component != "idf":
+                    component = name if name.startswith("espressif/") else f"espressif/{name}"
                     component = "[{}]({}{})".format(component, ESP_REGISTRY_URL, component)
 
                 components.append((component, version))
@@ -127,10 +130,12 @@ def extract_function_body(c_code, function_name):
     return None
 
 
-def get_capabilities_table(header_path, main_path, manifest):
+def get_capabilities_table(header_path, bsp_path, bsp_name, manifest):
     """
     Get markdown formatted table of manifest's capabilities
     """
+    with open(header_path, 'r') as f:
+        h_code = f.read()
     with open(header_path, 'r') as f:
         content = f.readlines()
         table_data = []
@@ -143,42 +148,58 @@ def get_capabilities_table(header_path, main_path, manifest):
 
                 # Check for specific driver/controller names in C file
                 additional_info = []
-                if main_path and main_path.exists():
-                    with open(main_path, "r", encoding="utf-8") as cf:
-                        c_code = cf.read()
+                boardname_src_file = (bsp_name + '.c')
+                c_files = [boardname_src_file, "bsp_display.c", "bsp_audio.c"]
+                for file in c_files:
+                    path = bsp_path / file
+                    # Some BSPs has main C file in src/ folder
+                    if not path.exists():
+                        path = bsp_path / "src" / file
 
-                        # DISPLAY: find all esp_lcd_new_panel_* excluding io_*
-                        if capability == "DISPLAY":
-                            display_matches = re.findall(r"esp_lcd_new_panel_([a-z0-9_]+)\s*\(", c_code)
-                            additional_info = [m for m in display_matches if not m.startswith("io_")]
+                    if path and path.exists():
+                        with open(path, "r", encoding="utf-8") as cf:
+                            c_code = cf.read()
 
-                        # TOUCH: esp_lcd_touch_new_i2c_*
-                        if capability == "TOUCH":
-                            additional_info = re.findall(r"esp_lcd_touch_new_i2c_([a-z0-9_]+)\s*\(", c_code)
+                            if file == boardname_src_file or file == "bsp_display.c":
+                                # DISPLAY: find all esp_lcd_new_panel_* excluding io_*
+                                if capability == "DISPLAY":
+                                    display_matches = re.findall(r"esp_lcd_new_panel_([a-z0-9_]+)\s*\(", c_code)
+                                    additional_info = [m for m in display_matches if not m.startswith("io_")]
 
-                        # AUDIO_SPEAKER
-                        if capability == "AUDIO_SPEAKER":
-                            speaker_code_section = extract_function_body(c_code, 'bsp_audio_codec_speaker_init')
-                            if speaker_code_section is not None:
-                                matches = re.findall(r"([a-z0-9_]+)_codec_new", speaker_code_section)
-                                additional_info = [m for m in matches if not m.startswith("audio")]
-                            if not additional_info:
-                                speaker_code_section = extract_function_body(c_code, 'bsp_audio_codec_init')
-                                if speaker_code_section is not None:
-                                    matches = re.findall(r"([a-z0-9_]+)_codec_new", speaker_code_section)
-                                    additional_info = [m for m in matches if not m.startswith("audio")]
+                                # TOUCH: esp_lcd_touch_new_i2c_*
+                                if capability == "TOUCH":
+                                    additional_info = re.findall(r"esp_lcd_touch_new_i2c_([a-z0-9_]+)\s*\(", c_code)
 
-                        # AUDIO_MIC
-                        if capability == "AUDIO_MIC":
-                            mic_code_section = extract_function_body(c_code, 'bsp_audio_codec_microphone_init')
-                            if mic_code_section is not None:
-                                matches = re.findall(r"([a-z0-9_]+)_codec_new", mic_code_section)
-                                additional_info = [m for m in matches if not m.startswith("audio")]
-                            if not additional_info:
-                                mic_code_section = extract_function_body(c_code, 'bsp_audio_codec_init')
-                                if mic_code_section is not None:
-                                    matches = re.findall(r"([a-z0-9_]+)_codec_new", mic_code_section)
-                                    additional_info = [m for m in matches if not m.startswith("audio")]
+                            if file == boardname_src_file or file == "bsp_audio.c":
+                                # AUDIO_SPEAKER
+                                if capability == "AUDIO_SPEAKER":
+                                    speaker_code_section = extract_function_body(c_code, 'bsp_audio_codec_speaker_init')
+                                    if speaker_code_section is not None:
+                                        matches = re.findall(r"([a-z0-9_]+)_codec_new", speaker_code_section)
+                                        additional_info = [m for m in matches if not m.startswith("audio")]
+                                    if not additional_info:
+                                        speaker_code_section = extract_function_body(c_code, 'bsp_audio_codec_init')
+                                        if speaker_code_section is not None:
+                                            matches = re.findall(r"([a-z0-9_]+)_codec_new", speaker_code_section)
+                                            additional_info = [m for m in matches if not m.startswith("audio")]
+
+                                # AUDIO_MIC
+                                if capability == "AUDIO_MIC":
+                                    mic_code_section = extract_function_body(c_code, 'bsp_audio_codec_microphone_init')
+                                    if mic_code_section is not None:
+                                        matches = re.findall(r"([a-z0-9_]+)_codec_new", mic_code_section)
+                                        additional_info = [m for m in matches if not m.startswith("audio")]
+                                    if not additional_info:
+                                        mic_code_section = extract_function_body(c_code, 'bsp_audio_codec_init')
+                                        if mic_code_section is not None:
+                                            matches = re.findall(r"([a-z0-9_]+)_codec_new", mic_code_section)
+                                            additional_info = [m for m in matches if not m.startswith("audio")]
+
+                # CAMERA SENSOR
+                if capability == "CAMERA":
+                    cam_match = re.search(r"Supported camera sensors:\s*(.*)", h_code)
+                    if cam_match:
+                        additional_info = re.findall(r"[A-Z0-9_]+", cam_match.group(1))
 
                 components = []
                 versions = []
@@ -282,26 +303,14 @@ def get_examples_table(bsp_name):
     return active_table
 
 
-def index_regexp(yourlist, yourstring):
-    for i, line in enumerate(yourlist):
-        if yourstring in line:
-            return i
-    return -1
-
-
 def check_bsp_readme(bsp_path) -> Any:
     # Get list of capabilities and dependencies of this BSP
     bsp_name = bsp_path.stem if not bsp_path.stem.endswith('_noglib') else bsp_path.stem[:-7]
     header_path = bsp_path / "include" / "bsp" / (bsp_name + '.h')
-    main_path = bsp_path / (bsp_name + '.c')
     readme_path = bsp_path / 'README.md'
     manager = ManifestManager(bsp_path, 'bsp')
 
-    # Some BSPs has main C file in src/ folder
-    if not main_path.exists():
-        main_path = bsp_path / "src" / (bsp_name + '.c')
-
-    table_capabilities_data = get_capabilities_table(header_path, main_path, manager.load())
+    table_capabilities_data = get_capabilities_table(header_path, bsp_path, bsp_name, manager.load())
     table_examples_md = get_examples_table(bsp_name)
 
     # Convert table to markdown format
@@ -353,7 +362,7 @@ def check_bsp_readme(bsp_path) -> Any:
         # UPDATE BENCHMARK TABLE
         try:
             benchmark_path = BENCHMARK_RELEASE_URL + "benchmark_" + bsp_name.replace('-', '_') + ".md"
-            with urllib.request.urlopen(benchmark_path) as response:
+            with urllib.request.urlopen(benchmark_path, timeout=10) as response:
                 benchmark_content = response.read().decode("utf-8")
             pattern = re.compile(
                 rf"{BENCHMARK_START}.*?{BENCHMARK_END}", re.DOTALL
@@ -373,6 +382,8 @@ def check_bsp_readme(bsp_path) -> Any:
                 print(f"Markers benchmark not in {bsp_name} README.md")
         except urllib.error.HTTPError:
             print(f"Benchmarks for {bsp_name} does not exist")
+        except (urllib.error.URLError, TimeoutError) as e:
+            print(f"[WARNING] Could not fetch benchmarks for {bsp_name} (Network/Timeout): {e}")
         except Exception as e:
             print(f"[WARNING] Failed to update benchmarks: {e}")
 
@@ -395,7 +406,8 @@ def check_all_bsps(filenames):
 
         try:
             check_bsp_readme(bsp_path)
-        except Exception:
+        except Exception as e:
+            print(e)
             ret += 1
     return ret
 

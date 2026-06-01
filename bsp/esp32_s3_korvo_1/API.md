@@ -230,6 +230,7 @@ The ADC can be initialized inside BSP, when needed.
 | Type | Name |
 | ---: | :--- |
 |  esp\_err\_t | [**bsp\_i2c\_deinit**](#function-bsp_i2c_deinit) (void) <br>_Deinit I2C driver and free its resources._ |
+|  i2c\_master\_bus\_handle\_t | [**bsp\_i2c\_get\_handle**](#function-bsp_i2c_get_handle) (void) <br>_Get I2C driver handle._ |
 |  esp\_err\_t | [**bsp\_i2c\_init**](#function-bsp_i2c_init) (void) <br>_Init I2C driver._ |
 
 ## Macros
@@ -260,6 +261,21 @@ esp_err_t bsp_i2c_deinit (
 
 * ESP\_OK On success
 * ESP\_ERR\_INVALID\_ARG I2C parameter error
+### function `bsp_i2c_get_handle`
+
+_Get I2C driver handle._
+```c
+i2c_master_bus_handle_t bsp_i2c_get_handle (
+    void
+) 
+```
+
+
+**Returns:**
+
+
+
+* I2C handle
 ### function `bsp_i2c_init`
 
 _Init I2C driver._
@@ -771,7 +787,7 @@ const audio_codec_data_if_t * bsp_audio_get_codec_itf_mic (
 
 
 
-* Pointer to codec I2S interface handle or NULL when error occured
+* Pointer to codec I2S interface handle or NULL when error occurred
 ### function `bsp_audio_get_codec_itf_spk`
 
 _Get es8311 codec I2S interface (initialized in bsp\_audio\_init)_
@@ -786,7 +802,7 @@ const audio_codec_data_if_t * bsp_audio_get_codec_itf_spk (
 
 
 
-* Pointer to codec I2S interface handle or NULL when error occured
+* Pointer to codec I2S interface handle or NULL when error occurred
 ### function `bsp_audio_init`
 
 _Init audio._
@@ -933,7 +949,7 @@ Returned button handlers must be used with espressif/button component API
 
 * ESP\_OK All buttons initialized
 * ESP\_ERR\_INVALID\_ARG btn\_array is too small or NULL
-* ESP\_FAIL Underlaying iot\_button\_create failed
+* ESP\_FAIL Underlying iot\_button\_create failed
 
 
 

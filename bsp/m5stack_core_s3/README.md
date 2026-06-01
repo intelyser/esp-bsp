@@ -2,8 +2,6 @@
 
 | [HW Reference](https://docs.m5stack.com/en/core/CoreS3) | [HOW TO USE API](API.md) | [EXAMPLES](#compatible-bsp-examples) | [![Component Registry](https://components.espressif.com/components/espressif/m5stack_core_s3/badge.svg)](https://components.espressif.com/components/espressif/m5stack_core_s3) | ![maintenance-status](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg) |
 | --- | --- | --- | --- | -- |
-> [!WARNING]
-> The SD card is not working simultaneously with the LCD screen. We are working on a fix.
 
 ## Overview
 
@@ -30,18 +28,22 @@ Sound output on CoreS3 is optimized with the high-fidelity 16-bit I2S power ampl
 <div align="center">
 <!-- START_DEPENDENCIES -->
 
-|     Available    |       Capability       |Controller/Codec|                                                  Component                                                 |   Version  |
-|------------------|------------------------|----------------|------------------------------------------------------------------------------------------------------------|------------|
-|:heavy_check_mark:|     :pager: DISPLAY    |     ili9341    | [espressif/esp_lcd_ili9341](https://components.espressif.com/components/espressif/esp_lcd_ili9341)<br/>idf |^1<br/>>=5.4|
-|:heavy_check_mark:|:black_circle: LVGL_PORT|                |       [espressif/esp_lvgl_port](https://components.espressif.com/components/espressif/esp_lvgl_port)       |     ^2     |
-|:heavy_check_mark:|    :point_up: TOUCH    |     ft5x06     |[espressif/esp_lcd_touch_ft5x06](https://components.espressif.com/components/espressif/esp_lcd_touch_ft5x06)|     ^1     |
-|        :x:       | :radio_button: BUTTONS |                |                                                                                                            |            |
-|:heavy_check_mark:|  :musical_note: AUDIO  |                |       [espressif/esp_codec_dev](https://components.espressif.com/components/espressif/esp_codec_dev)       |   ~1.3.1   |
-|:heavy_check_mark:| :speaker: AUDIO_SPEAKER|     aw88298    |                                                                                                            |            |
-|:heavy_check_mark:| :microphone: AUDIO_MIC |     es7210     |                                                                                                            |            |
-|:heavy_check_mark:|  :floppy_disk: SDCARD  |                |                                                     idf                                                    |    >=5.4   |
-|        :x:       |    :video_game: IMU    |                |                                                                                                            |            |
-|:heavy_check_mark:|     :camera: CAMERA    |                |        [espressif/esp32-camera](https://components.espressif.com/components/espressif/esp32-camera)        |   ^2.0.11  |
+|     Available    |       Capability       |Controller/Codec|                                                  Component                                                 |  Version  |
+|------------------|------------------------|----------------|------------------------------------------------------------------------------------------------------------|-----------|
+|:heavy_check_mark:|     :pager: DISPLAY    |     ili9341    | idf<br/>[espressif/esp_lcd_ili9341](https://components.espressif.com/components/espressif/esp_lcd_ili9341) |>=5.4<br/>*|
+|:heavy_check_mark:|:black_circle: LVGL_PORT|                |       [espressif/esp_lvgl_port](https://components.espressif.com/components/espressif/esp_lvgl_port)       |     ^2    |
+|:heavy_check_mark:|    :point_up: TOUCH    |     ft5x06     |[espressif/esp_lcd_touch_ft5x06](https://components.espressif.com/components/espressif/esp_lcd_touch_ft5x06)|     *     |
+|        :x:       | :radio_button: BUTTONS |                |                                                                                                            |           |
+|        :x:       |   :white_circle: KNOB  |                |                                                                                                            |           |
+|:heavy_check_mark:|  :musical_note: AUDIO  |                |       [espressif/esp_codec_dev](https://components.espressif.com/components/espressif/esp_codec_dev)       |    ~1.5   |
+|:heavy_check_mark:| :speaker: AUDIO_SPEAKER|     aw88298    |                                                                                                            |           |
+|:heavy_check_mark:| :microphone: AUDIO_MIC |     es7210     |                                                                                                            |           |
+|:heavy_check_mark:|  :floppy_disk: SDCARD  |                |                                                     idf                                                    |   >=5.4   |
+|        :x:       |       :bulb: LED       |                |                                                                                                            |           |
+|:heavy_check_mark:|     :camera: CAMERA    |     GC0308     |           [espressif/esp_video](https://components.espressif.com/components/espressif/esp_video)           |    ~2.0   |
+|        :x:       |      :battery: BAT     |                |                                                                                                            |           |
+|:heavy_check_mark:|    :video_game: IMU    |                |                                                                                                            |           |
+|        :x:       | :thermometer: HUMITURE |                |                                                                                                            |           |
 
 <!-- END_DEPENDENCIES -->
 </div>
@@ -55,10 +57,11 @@ Sound output on CoreS3 is optimized with the high-fidelity 16-bit I2S power ampl
 | ------- | ----------- | ---------------------- |
 | [Display Example](https://github.com/espressif/esp-bsp/tree/master/examples/display) | Show an image on the screen with a simple startup animation (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display-) |
 | [Display, Audio and Photo Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_audio_photo) | Complex demo: browse files from filesystem and play/display JPEG, WAV, or TXT files (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_audio_photo-) |
-| [Camera Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_camera) | Stream camera output to display (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_camera-) |
+| [Camera Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_camera_video) | Stream camera output to display (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_camera_video) |
 | [LVGL Benchmark Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_lvgl_benchmark) | Run LVGL benchmark tests | - |
 | [LVGL Demos Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_lvgl_demos) | Run the LVGL demo player - all LVGL examples are included (LVGL) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_lvgl_demos-) |
-| [Display Rotation Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_rotation) | Rotate screen using buttons or an accelerometer (`BSP_CAPS_IMU`, if available) | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_rotation-) |
+| [Display SD card Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_sdcard) | Example of mounting an SD card using SD-MMC/SPI with display interaction. This example is also supported on boards without a display. | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_sdcard) |
+| [Sensors Example](https://github.com/espressif/esp-bsp/tree/master/examples/display_sensors) | Acquire sensor data using the sensor hub component | [Flash Example](https://espressif.github.io/esp-launchpad/?flashConfigURL=https://espressif.github.io/esp-bsp/config.toml&app=display_sensors) |
 
 <!-- END_EXAMPLES -->
 </div>
@@ -67,29 +70,29 @@ Sound output on CoreS3 is optimized with the high-fidelity 16-bit I2S power ampl
 
 ## LVGL Benchmark
 
-**DATE:** 11.08.2025 02:49
+**DATE:** 08.01.2026 01:35
 
-**LVGL version:** 9.3.0
+**LVGL version:** 9.4.0
 
 | Name | Avg. CPU | Avg. FPS | Avg. time | render time | flush time |
 | ---- | :------: | :------: | :-------: | :---------: | :--------: |
-| Empty screen | 94%  | 29  | 30  | 5  | 25  |
-| Moving wallpaper | 93%  | 30  | 30  | 10  | 20  |
-| Single rectangle | 20%  | 90  | 0  | 0  | 0  |
-| Multiple rectangles | 82%  | 56  | 13  | 4  | 9  |
-| Multiple RGB images | 17%  | 87  | 1  | 1  | 0  |
-| Multiple ARGB images | 26%  | 90  | 2  | 2  | 0  |
-| Rotated ARGB images | 84%  | 50  | 18  | 15  | 3  |
-| Multiple labels | 83%  | 80  | 9  | 9  | 0  |
-| Screen sized text | 95%  | 22  | 41  | 39  | 2  |
-| Multiple arcs | 17%  | 91  | 1  | 1  | 0  |
-| Containers | 34%  | 73  | 14  | 7  | 7  |
-| Containers with overlay | 92%  | 28  | 30  | 18  | 12  |
-| Containers with opa | 41%  | 73  | 16  | 10  | 6  |
-| Containers with opa_layer | 61%  | 56  | 26  | 21  | 5  |
-| Containers with scrolling | 93%  | 27  | 32  | 20  | 12  |
-| Widgets demo | 96%  | 27  | 20  | 17  | 3  |
-| All scenes avg. | 64%  | 56  | 17  | 11  | 6  |
+| Empty screen | 94%  | 29  | 30  | 6  | 24  |
+| Moving wallpaper | 95%  | 30  | 30  | 8  | 22  |
+| Single rectangle | 23%  | 94  | 0  | 0  | 0  |
+| Multiple rectangles | 83%  | 56  | 14  | 7  | 7  |
+| Multiple RGB images | 28%  | 90  | 1  | 1  | 0  |
+| Multiple ARGB images | 25%  | 89  | 3  | 3  | 0  |
+| Rotated ARGB images | 78%  | 50  | 18  | 15  | 3  |
+| Multiple labels | 85%  | 77  | 9  | 9  | 0  |
+| Screen sized text | 96%  | 22  | 41  | 39  | 2  |
+| Multiple arcs | 29%  | 92  | 1  | 1  | 0  |
+| Containers | 36%  | 73  | 16  | 8  | 8  |
+| Containers with overlay | 86%  | 28  | 31  | 21  | 10  |
+| Containers with opa | 46%  | 72  | 17  | 11  | 6  |
+| Containers with opa_layer | 57%  | 55  | 27  | 22  | 5  |
+| Containers with scrolling | 94%  | 26  | 33  | 22  | 11  |
+| Widgets demo | 97%  | 26  | 22  | 19  | 3  |
+| All scenes avg. | 65%  | 56  | 18  | 12  | 6  |
 
 
 

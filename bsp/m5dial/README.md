@@ -36,11 +36,11 @@ M5Dial provides versatile power supply options to cater to various needs. It acc
 
 |     Available    |       Capability       |Controller/Codec|                                                  Component                                                 |   Version  |
 |------------------|------------------------|----------------|------------------------------------------------------------------------------------------------------------|------------|
-|:heavy_check_mark:|     :pager: DISPLAY    |     gc9a01     |  [espressif/esp_lcd_gc9a01](https://components.espressif.com/components/espressif/esp_lcd_gc9a01)<br/>idf  |^1<br/>>=5.0|
+|:heavy_check_mark:|     :pager: DISPLAY    |     gc9a01     |  idf<br/>[espressif/esp_lcd_gc9a01](https://components.espressif.com/components/espressif/esp_lcd_gc9a01)  |>=5.3<br/>^2|
 |:heavy_check_mark:|:black_circle: LVGL_PORT|                |       [espressif/esp_lvgl_port](https://components.espressif.com/components/espressif/esp_lvgl_port)       |     ^2     |
 |:heavy_check_mark:|    :point_up: TOUCH    |     ft5x06     |[espressif/esp_lcd_touch_ft5x06](https://components.espressif.com/components/espressif/esp_lcd_touch_ft5x06)|     ^1     |
 |:heavy_check_mark:| :radio_button: BUTTONS |                |              [espressif/button](https://components.espressif.com/components/espressif/button)              |     ^4     |
-|:heavy_check_mark:|   :white_circle: KNOB  |                |                [espressif/knob](https://components.espressif.com/components/espressif/knob)                |   ^0.1.3   |
+|:heavy_check_mark:|   :white_circle: KNOB  |                |                [espressif/knob](https://components.espressif.com/components/espressif/knob)                |     ^1     |
 |        :x:       |  :musical_note: AUDIO  |                |                                                                                                            |            |
 |        :x:       | :speaker: AUDIO_SPEAKER|                |                                                                                                            |            |
 |        :x:       | :microphone: AUDIO_MIC |                |                                                                                                            |            |
@@ -69,29 +69,29 @@ M5Dial provides versatile power supply options to cater to various needs. It acc
 
 ## LVGL Benchmark
 
-**DATE:** 11.08.2025 02:49
+**DATE:** 08.01.2026 01:35
 
-**LVGL version:** 9.3.0
+**LVGL version:** 9.4.0
 
 | Name | Avg. CPU | Avg. FPS | Avg. time | render time | flush time |
 | ---- | :------: | :------: | :-------: | :---------: | :--------: |
-| Empty screen | 93%  | 38  | 22  | 6  | 16  |
-| Moving wallpaper | 94%  | 39  | 24  | 12  | 12  |
-| Single rectangle | 25%  | 97  | 0  | 0  | 0  |
-| Multiple rectangles | 89%  | 61  | 12  | 7  | 5  |
-| Multiple RGB images | 30%  | 94  | 1  | 1  | 0  |
-| Multiple ARGB images | 34%  | 94  | 3  | 3  | 0  |
-| Rotated ARGB images | 80%  | 59  | 16  | 16  | 0  |
-| Multiple labels | 66%  | 95  | 4  | 4  | 0  |
-| Screen sized text | 96%  | 23  | 40  | 38  | 2  |
-| Multiple arcs | 33%  | 92  | 1  | 1  | 0  |
-| Containers | 36%  | 81  | 13  | 8  | 5  |
-| Containers with overlay | 89%  | 33  | 26  | 21  | 5  |
-| Containers with opa | 43%  | 77  | 17  | 13  | 4  |
-| Containers with opa_layer | 49%  | 70  | 19  | 16  | 3  |
-| Containers with scrolling | 95%  | 32  | 27  | 21  | 6  |
-| Widgets demo | 97%  | 27  | 20  | 18  | 2  |
-| All scenes avg. | 65%  | 63  | 14  | 11  | 3  |
+| Empty screen | 96%  | 37  | 22  | 6  | 16  |
+| Moving wallpaper | 98%  | 38  | 23  | 11  | 12  |
+| Single rectangle | 30%  | 97  | 1  | 0  | 1  |
+| Multiple rectangles | 90%  | 58  | 13  | 8  | 5  |
+| Multiple RGB images | 24%  | 89  | 1  | 1  | 0  |
+| Multiple ARGB images | 33%  | 90  | 4  | 3  | 1  |
+| Rotated ARGB images | 82%  | 58  | 16  | 16  | 0  |
+| Multiple labels | 56%  | 89  | 5  | 5  | 0  |
+| Screen sized text | 97%  | 23  | 41  | 40  | 1  |
+| Multiple arcs | 27%  | 90  | 0  | 0  | 0  |
+| Containers | 38%  | 80  | 16  | 11  | 5  |
+| Containers with overlay | 94%  | 32  | 26  | 22  | 4  |
+| Containers with opa | 53%  | 77  | 17  | 14  | 3  |
+| Containers with opa_layer | 51%  | 69  | 20  | 17  | 3  |
+| Containers with scrolling | 97%  | 30  | 29  | 24  | 5  |
+| Widgets demo | 99%  | 25  | 22  | 21  | 1  |
+| All scenes avg. | 66%  | 61  | 15  | 12  | 3  |
 
 
 

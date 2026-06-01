@@ -1,17 +1,15 @@
-# esp_lvgl_port: Build only on related changes and components used in examples
 components/esp_lvgl_port:
   depends_filepatterns:
     - "components/esp_lvgl_port/**"
-    - "components/lcd_touch/esp_lcd_touch_tt21100/**"
-    - "components/lcd_touch/esp_lcd_touch_gt1151/**"
+    - "components/lcd_touch/**"
+    - "components/lcd/**"
 
-components/esp_lvgl_port/examples/i2c_oled:
+components/esp_lvgl_port/examples/rgb_lcd:
   depends_filepatterns:
     - "components/esp_lvgl_port/**"
-    - "components/lcd/sh1107/**"
-  disable:
-    - if: (IDF_VERSION_MAJOR == 5 and IDF_VERSION_MINOR < 2) or IDF_VERSION_MAJOR < 5
-      reason: Requires I2C Driver-NG which was introduced in v5.2
+  enable:
+    - if: IDF_TARGET in ["esp32s3", "esp32p4"]
+      reason: Supports only targets with RGB peripheral
 
 components/esp_lvgl_port/test_apps/simd:
   depends_filepatterns:
@@ -20,23 +18,28 @@ components/esp_lvgl_port/test_apps/simd:
     - if: IDF_TARGET in ["esp32", "esp32s3"]
       reason: Supports only xtensa targets
 
-components/ds18b20:
+components/ds18b20/examples/ds18b20_read:
   depends_filepatterns:
     - "components/ds18b20/**"
   disable:
-    - if: SOC_RMT_SUPPORTED != 1
-      reason: Onewire component depends on RMT peripheral
+    - if: CONFIG_NAME == "rmt" and SOC_RMT_SUPPORTED != 1
+      reason: RMT backend variant requires SOC RMT support
+    - if: CONFIG_NAME == "uart" and SOC_UART_SUPPORTED != 1
+      reason: UART backend variant requires SOC UART support
 
-components/icm42670:
+components/ds18b20/examples/ds18b20_sensor_hub:
   depends_filepatterns:
-    - "components/icm42670/**"
+    - "components/ds18b20/**"
   disable:
-    - if: (IDF_VERSION_MAJOR == 5 and IDF_VERSION_MINOR < 2) or IDF_VERSION_MAJOR < 5
-      reason: Requires I2C Driver-NG which was introduced in v5.2
+    - if: CONFIG_NAME == "uart"
+      reason: ESP32
 
 components/qma6100p:
   depends_filepatterns:
     - "components/qma6100p/**"
+
+components/bh1750:
+  depends_filepatterns:
+    - "components/bh1750/**"
   disable:
-    - if: (IDF_VERSION_MAJOR == 5 and IDF_VERSION_MINOR < 2) or IDF_VERSION_MAJOR < 5
-      reason: Requires I2C Driver-NG which was introduced in v5.2
+    - if: IDF_VERSION < "5.3.0"

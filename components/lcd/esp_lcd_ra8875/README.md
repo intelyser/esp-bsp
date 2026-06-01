@@ -2,7 +2,7 @@
 
 [![Component Registry](https://components.espressif.com/components/espressif/esp_lcd_ra8875/badge.svg)](https://components.espressif.com/components/espressif/esp_lcd_ra8875)
 
-Implementation of the RA8875 LCD controller with esp_lcd component. 
+Implementation of the RA8875 LCD controller with esp_lcd component.
 
 | LCD controller | Communication interface | Component name | Link to datasheet |
 | :------------: | :---------------------: | :------------: | :---------------: |
@@ -11,7 +11,7 @@ Implementation of the RA8875 LCD controller with esp_lcd component.
 ## Add to project
 
 Packages from this repository are uploaded to [Espressif's component service](https://components.espressif.com/).
-You can add them to your project via `idf.py add-dependancy`, e.g. 
+You can add them to your project via `idf.py add-dependancy`, e.g.
 ```
     idf.py add-dependency esp_lcd_ra8875==1.0.0
 ```
@@ -33,7 +33,7 @@ Alternatively, you can create `idf_component.yml`. More is in [Espressif's docum
 
 For detailed usage, please go to [LCD documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/lcd.html).
 
-## Example initialization 
+## Example initialization
 
 ```
 esp_lcd_i80_bus_handle_t i80_bus = NULL;
@@ -61,8 +61,7 @@ esp_lcd_i80_bus_config_t bus_config = {
     },
     .bus_width = BOARD_DISP_PARALLEL_WIDTH,
     .max_transfer_bytes = (BOARD_DISP_PARALLEL_HRES) * 80 * sizeof(uint16_t),
-    .psram_trans_align = 64,
-    .sram_trans_align = 4,
+    .dma_burst_size = 64,
 };
 ESP_ERROR_CHECK(esp_lcd_new_i80_bus(&bus_config, &i80_bus));
 
@@ -95,7 +94,7 @@ const esp_lcd_panel_ra8875_config_t vendor_config = {
 
 esp_lcd_panel_dev_config_t panel_config = {
     .reset_gpio_num = BOARD_DISP_PARALLEL_RST,
-    .color_space = ESP_LCD_COLOR_SPACE_RGB,
+    .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,
     .bits_per_pixel = 16,
     .vendor_config = (void*)&vendor_config,
 };
